@@ -40,10 +40,26 @@ if len(sys.argv) < 2:
             confirm = input("Confirm that you would like to DECRYPT your files (y/n): ")
 
 else:
-    inFolder = sys.argv[1]
-    outFolder = sys.argv[2]
-    key_word = sys.argv[3]
-    e_or_d = sys.argv[4]
+    try:
+        inFolder = sys.argv[1]
+        outFolder = sys.argv[2]
+        key_word = sys.argv[3]
+        e_or_d = sys.argv[4]
+        # print(os.listdir(os.getcwd()))
+        if inFolder not in os.listdir(os.getcwd()):
+            raise Exception(inFolder+ " does not exist in the current working directory.")
+        if outFolder not in os.listdir(os.getcwd()):
+            raise Exception(outFolder+ " does not exist in the current working directory.")
+        if e_or_d != "e" and e_or_d != "d":
+            raise Exception("Argument #4 must either be \"e\" for encryption or \"d\" for decryption.")
+    except Exception as e:
+        print()
+        print(e)
+        print()
+        print("Command line arguments should be in the following format:")
+        print("python3 fileSecDriver.py <inFolder> <outFolder> <keyword> <e/d(encryption or decryption)>")
+        print()
+        sys.exit(1)
 
 fileS = SecureFile(key_word)
 
@@ -71,7 +87,6 @@ def encrypt_decrypt(inFolder, outFolder):
                 success = fileS.decrypt()
                 if success == -1:
                     sys.exit("Incorrect key given")
-                    # print("Incorrect key given.")
             else:
                 #should never get here
                 raise Exception("Encrypt / Decrypt not correctly set.")
